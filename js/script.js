@@ -99,7 +99,7 @@ const removeLinks = () => {
 
 const errorMessage = () => {
   const error = createElement('h2', 'className', 'error')
-  error.textContent = 'No Student found with that name';
+  error.textContent = 'Sorry, no Student found with that name';
   pageDiv.appendChild(error);
 };
 
@@ -116,7 +116,7 @@ const filter = (input) => {
   removeErrorMessage();
   for ( let i = 0; i < students.length; i++ ) {
     const student = students[i].textContent;
-    console.log(students[i].parentNode);
+    //console.log(students[i].parentNode);
     students[i].parentNode.parentNode.style.display = 'none';
     if ( student.includes(input) ){
       students[i].parentNode.parentNode.style.display = '';
@@ -143,6 +143,11 @@ const studentSearch = () => {
 
   searchInputField.addEventListener('keyup', (e) => {
     const input = e.target.value;
+    filter(input);
+  });
+
+  searchButton.addEventListener('click', (e) => {
+    const input = searchInputField.value;
     filter(input);
   });
 };
