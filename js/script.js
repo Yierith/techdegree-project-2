@@ -75,7 +75,9 @@ const appendPageLinks = ( list ) => {
     const paginationLink = createElement('a', 'href', '#');
     paginationLink.textContent = i + 1;
     paginationLi.appendChild(paginationLink);
-
+    if ( i === 0 ){
+      paginationLink.className = 'active';
+    }
     paginationLink.addEventListener('click', (e) => {
       if ( e.target.tagName === 'A' ){
         const paginationLinks = document.querySelectorAll('a');
@@ -90,8 +92,19 @@ const appendPageLinks = ( list ) => {
   }
 };
 
+const studentSearch = () => {
+  const studentSearchDiv = createElement('div', 'className', 'student-search');
+  pageHeader.appendChild(studentSearchDiv);
+
+  const searchInputField = createElement('input', 'placeholder', 'Search for students...');
+  studentSearchDiv.appendChild(searchInputField);
+
+  const searchButton = createElement('button', 'textContent', 'Search');
+  studentSearchDiv.appendChild(searchButton);
+};
 
 
+studentSearch();
 showPage(studentList, 1);
 appendPageLinks(studentList);
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
