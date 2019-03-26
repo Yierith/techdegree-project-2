@@ -92,6 +92,24 @@ const appendPageLinks = ( list ) => {
   }
 };
 
+const filter = (input) => {
+  const students = document.querySelectorAll('h3');
+  const foundStudents = [];
+
+  for ( let i = 0; i < students.length; i++ ) {
+    const student = students[i].textContent;
+    console.log(students[i].parentNode);
+    students[i].parentNode.parentNode.style.display = 'none';
+    if ( student.includes(input) ){
+      students[i].parentNode.parentNode.style.display = '';
+      foundStudents.push(student);
+    }
+  }
+
+
+};
+
+
 const studentSearch = () => {
   const studentSearchDiv = createElement('div', 'className', 'student-search');
   pageHeader.appendChild(studentSearchDiv);
@@ -101,6 +119,11 @@ const studentSearch = () => {
 
   const searchButton = createElement('button', 'textContent', 'Search');
   studentSearchDiv.appendChild(searchButton);
+
+  searchInputField.addEventListener('keyup', (e) => {
+    const input = e.target.value;
+    filter(input);
+  });
 };
 
 
