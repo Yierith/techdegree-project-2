@@ -63,13 +63,35 @@ const createElement = (elementName, property, value) => {
    functionality to the pagination buttons.
 ***/
 const appendPageLinks = ( list ) => {
-  const studentsToShow = Math.ceil( list / studentsPerPage );
+  const numberOfPages = Math.ceil( list.length / studentsPerPage );
+  const paginationDiv = createElement('div', 'className', 'pagination');
+  pageDiv.appendChild(paginationDiv);
+  const paginationUl = document.createElement('ul');
+  paginationDiv.appendChild(paginationUl);
 
+  for ( let i = 0; i < numberOfPages; i++ ){
+    const paginationLi = document.createElement('li');
+    paginationUl.appendChild(paginationLi);
+    const paginationLink = createElement('a', 'href', '#');
+    paginationLink.textContent = i + 1;
+    paginationLi.appendChild(paginationLink);
 
-
+    paginationLink.addEventListener('click', (e) => {
+      if ( e.target.tagName === 'A' ){
+        const paginationLinks = document.querySelectorAll('a');
+        console.log(paginationLinks);
+        for ( let j = 0; j < paginationLinks.length; j++ ){
+          paginationLinks[j].classList.remove('active');
+        }
+        showPage(studentList, e.target.textContent);
+        e.target.className = 'active';
+      }
+    });
+  }
 };
 
 
 
 showPage(studentList, 1);
+appendPageLinks(studentList);
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
