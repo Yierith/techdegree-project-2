@@ -40,8 +40,8 @@ const studentsPerPage = 10;
 const showPage = (list, page) => {
   const firstStudentOfPage = ( page * studentsPerPage ) - 10;
   const lastStudentOfPage = ( page * studentsPerPage ) - 1;
-  console.log(firstStudentOfPage);
-  console.log(lastStudentOfPage);
+  //console.log(firstStudentOfPage);
+  //console.log(lastStudentOfPage);
 
   for ( let i = 0; i < list.length; i++ ){
     if ( i >= firstStudentOfPage && i <= lastStudentOfPage ){
@@ -81,7 +81,7 @@ const appendPageLinks = ( list ) => {
     paginationLink.addEventListener('click', (e) => {
       if ( e.target.tagName === 'A' ){
         const paginationLinks = document.querySelectorAll('a');
-        console.log(paginationLinks);
+        //console.log(paginationLinks);
         for ( let j = 0; j < paginationLinks.length; j++ ){
           paginationLinks[j].classList.remove('active');
         }
@@ -92,10 +92,28 @@ const appendPageLinks = ( list ) => {
   }
 };
 
+const removeLinks = () => {
+  const links = document.querySelector('.pagination');
+  links.parentNode.removeChild(links);
+};
+
+const errorMessage = () => {
+  const error = createElement('h2', 'className', 'error')
+  error.textContent = 'No Student found with that name';
+  pageDiv.appendChild(error);
+};
+
 const filter = (input) => {
   const students = document.querySelectorAll('h3');
   const foundStudents = [];
 
+  const removeErrorMessage = () => {
+		const getError = document.querySelector('.error');
+		if (getError) {
+			pageDiv.removeChild(getError);
+		}
+	};
+  removeErrorMessage();
   for ( let i = 0; i < students.length; i++ ) {
     const student = students[i].textContent;
     console.log(students[i].parentNode);
@@ -105,8 +123,11 @@ const filter = (input) => {
       foundStudents.push(student);
     }
   }
-
-
+  if ( foundStudents.length <= 0 ){
+    errorMessage();
+  }
+  removeLinks();
+  appendPageLinks(foundStudents);
 };
 
 
