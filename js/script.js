@@ -6,16 +6,7 @@ FSJS project 2 - List Filter and Pagination
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
 
-/***
-   Add your global variables that store the DOM elements you will
-   need to reference and/or manipulate.
-
-   But be mindful of which variables should be global and which
-   should be locally scoped to one of the two main functions you're
-   going to create. A good general rule of thumb is if the variable
-   will only be used inside of a function, then it can be locally
-   scoped to that function.
-***/
+// Global constants
 const pageDiv = document.querySelector('.page');
 const pageHeader = document.querySelector('.page-header');
 const studentUl = document.querySelector('.student-list');
@@ -23,26 +14,14 @@ const studentList = studentUl.children;
 const studentsPerPage = 10;
 
 
-/***
-   Create the `showPage` function to hide all of the items in the
-   list except for the ten you want to show.
 
-   Pro Tips:
-     - Keep in mind that with a list of 54 students, the last page
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when
-       you initially define the function, and it acts as a variable
-       or a placeholder to represent the actual function `argument`
-       that will be passed into the parens later when you call or
-       "invoke" the function
-***/
+// Function to show needed Students for a specific page
 const showPage = (list, page) => {
+  // First and Last Student on Page
   const firstStudentOfPage = ( page * studentsPerPage ) - 10;
   const lastStudentOfPage = ( page * studentsPerPage ) - 1;
-  //console.log(firstStudentOfPage);
-  //console.log(lastStudentOfPage);
 
+  // Looping through the list parameter to display and hide Students
   for ( let i = 0; i < list.length; i++ ){
     if ( i >= firstStudentOfPage && i <= lastStudentOfPage ){
       list[i].style.display = '';
@@ -52,57 +31,65 @@ const showPage = (list, page) => {
   }
 };
 
+// Function to create an Element, for DRY purposes.
 const createElement = (elementName, property, value) => {
   const element = document.createElement(elementName);
   element[property] = value;
   return element;
 };
 
-/***
-   Create the `appendPageLinks function` to generate, append, and add
-   functionality to the pagination buttons.
-***/
+
+// Appending pagination to the links
 const appendPageLinks = ( list ) => {
+  // Calculate the number of pages needed
   const numberOfPages = Math.ceil( list.length / studentsPerPage );
+  // Creating the pagination Div
   const paginationDiv = createElement('div', 'className', 'pagination');
   pageDiv.appendChild(paginationDiv);
   const paginationUl = document.createElement('ul');
   paginationDiv.appendChild(paginationUl);
-
+  // Looping over the number of pages and filling the pagination with links
   for ( let i = 0; i < numberOfPages; i++ ){
     const paginationLi = document.createElement('li');
     paginationUl.appendChild(paginationLi);
     const paginationLink = createElement('a', 'href', '#');
     paginationLink.textContent = i + 1;
     paginationLi.appendChild(paginationLink);
+    // Set the first page link to active when entering the page
     if ( i === 0 ){
       paginationLink.className = 'active';
     }
+    // Eventlistener to monitor clicks onto the pagination links
     paginationLink.addEventListener('click', (e) => {
       if ( e.target.tagName === 'A' ){
         const paginationLinks = document.querySelectorAll('a');
-        //console.log(paginationLinks);
+        // Removing the active class from all of the links
         for ( let j = 0; j < paginationLinks.length; j++ ){
           paginationLinks[j].classList.remove('active');
         }
+        // Showing the page.
         showPage(studentList, e.target.textContent);
+        // Adding the active class to the clicked link
         e.target.className = 'active';
       }
     });
   }
 };
 
+// Removing links from page
 const removeLinks = () => {
   const links = document.querySelector('.pagination');
   links.parentNode.removeChild(links);
 };
 
+// Building an error message if no student was found and appending it to the page
 const errorMessage = () => {
   const error = createElement('h2', 'className', 'error')
   error.textContent = 'Sorry, no Student found with that name';
   pageDiv.appendChild(error);
 };
 
+// Filter the students based on the input entered into the search bar
 const filter = (input) => {
   const students = document.querySelectorAll('h3');
   const foundStudents = [];
@@ -114,23 +101,28 @@ const filter = (input) => {
 		}
 	};
   removeErrorMessage();
+  // Looping over the students to hide all who dont include the entered Search input value
   for ( let i = 0; i < students.length; i++ ) {
     const student = students[i].textContent;
-    //console.log(students[i].parentNode);
     students[i].parentNode.parentNode.style.display = 'none';
+    // Showing all students which names include the search input value
     if ( student.includes(input) ){
       students[i].parentNode.parentNode.style.display = '';
+      // Adding found students to a list know which should be shown based on the search string
       foundStudents.push(student);
     }
   }
+  // Creating an error message when no student found with the entered search string
   if ( foundStudents.length <= 0 ){
     errorMessage();
   }
+  // Removing pagination links
   removeLinks();
+  // Showing the new page with the found students
   appendPageLinks(foundStudents);
 };
 
-
+// Adding Searchbar and Searchbutton to the page
 const studentSearch = () => {
   const studentSearchDiv = createElement('div', 'className', 'student-search');
   pageHeader.appendChild(studentSearchDiv);
@@ -140,20 +132,18 @@ const studentSearch = () => {
 
   const searchButton = createElement('button', 'textContent', 'Search');
   studentSearchDiv.appendChild(searchButton);
-
+  // Realtime filtering for every letter entered into the search Field
   searchInputField.addEventListener('keyup', (e) => {
     const input = e.target.value;
     filter(input);
   });
-
+  // Filter functionality for the search button
   searchButton.addEventListener('click', (e) => {
     const input = searchInputField.value;
     filter(input);
   });
 };
 
-
 studentSearch();
 showPage(studentList, 1);
 appendPageLinks(studentList);
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
