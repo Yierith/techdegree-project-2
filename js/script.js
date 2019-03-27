@@ -105,8 +105,8 @@ const filter = (input) => {
   for ( let i = 0; i < students.length; i++ ) {
     const student = students[i].textContent;
     students[i].parentNode.parentNode.style.display = 'none';
-    // Showing all students which names include the search input value
-    if ( student.includes(input) ){
+    // Showing all students which names include the lower cased search input value
+    if ( student.includes(input.toLowerCase()) ){
       students[i].parentNode.parentNode.style.display = '';
       // Adding found students to a list know which should be shown based on the search string
       foundStudents.push(student);
